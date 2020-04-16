@@ -4,8 +4,38 @@
 #include "county.h"
 #include <string.h>
 #include <math.h>
+#include <getopt.h>
 
-int main(){
+int main(int argc, char** argv){
+  uint16_t fips_to_show = 0;
+  bool show_cases = false;
+  bool show_deaths = false;
+  bool show_growth_rate = false;
+  bool show_log_cases = false;
+  
+  int c = 0;
+  while ((c = getopt(argc,argv, "f:cdgl")) != -1){
+    switch(c){
+    case 'f':
+      fips_to_show = atoi(optarg);
+      break;
+    case 'c':
+      show_cases = true;
+      break;
+    case 'd':
+      show_deaths = true;
+      break;
+    case 'g':
+      show_growth_rate = true;
+      break;
+    case 'l':
+      show_log_cases = true;
+      break;
+    default:
+      break;
+    }
+  }
+
   regex_t regex;
   regcomp(&regex, "[a-zA-ZÁ-ÿ0-9.' -]+", REG_EXTENDED);
   char *word;
@@ -15,11 +45,10 @@ int main(){
 
   int row = 0;
   int column = 0;
-  
-  extern county *county_table[57000];
-  
   char this_row[6][15];
   
+  extern county *county_table[57000];
+
 
   fseek(data,0L,SEEK_END);               //// Loading bar 
   uint32_t data_size = ftell(data);        //  preperation
@@ -27,6 +56,7 @@ int main(){
   uint8_t percentage_printed = 0;          //
   uint32_t bytes_processed = 0;          ////
 
+  printf("Reading from us-counties.csv");
   printf("\nLoading...%%\n");
   while((word = next_word(data, &regex)) != NULL){
     
@@ -74,15 +104,31 @@ int main(){
     column%=6; 
   }
   clear_words();
-  
+  printf("Finished reading from us-counties.csv\n\n");
+
+
+
+
 
 
 
 
   //6085 is santa clara
   //36061 is new york city and surrounding areas
-  county *of_study = county_table[6085];
-
+  county *of_study = county_table[fips_to_show];
+  if(of_study){
+    for(uint32_t h = 0; h < of_study->last_day; h++){
+      uint32_t *cases = &of_study->cases[h];
+      if(cases[0] == 0){
+        cases[0] = cases[-1];
+      }
+      
+      char *date = int_to_date(h);
+      printf("%s ",date);
+      free(date);
+      
+      printf("%9d",cases[0]);
+    }  
   for(uint32_t h = 4;h<of_study->last_day; h++){
      
     uint32_t *cases = &of_study->cases[h];
@@ -109,15 +155,26 @@ int main(){
         printf("#");
     }
     printf("                              / cases: %d day number: %d", cases[0], h);
-    printf("\n");
+      printf("\n");
+    }
+  
+  }else{
+    printf("Invalid fips code\n");
   }
   
-  
-   
-  for(int h = 0;h < 57000; h++){
-    output_county(h);
-    delete_county(county_table[h]); 
+
+
+
+  printf("\n\nStowing county information\n");
+  printf("Loading...%%\n");
+  for(int h = 0; h < 100; h++){
+    for(int i = 0; i < 570; i++){
+      output_county(h*570 + i);
+      delete_county(county_table[h*570 + i]);
+    }
+    printf("%d\n",h);
   }
+  printf("Completed\n");
 
   regfree(&regex);
   fclose(data);
