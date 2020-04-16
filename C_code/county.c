@@ -8,7 +8,7 @@
 #define YEAR_0 2020
 
 bool is_leap_year(uint32_t year){
-  return (year%4 == 0 &&(!year%100 || year%400 == 0));
+  return (year%4 == 0 &&(!year%100 == 0 || year%400 == 0));
 }
 
 static const uint16_t zeroeth_day_of[12] = {
@@ -75,28 +75,32 @@ char *int_to_date(uint32_t daynum){
   
   if(daynum == 0){
     daynum +=366;
+    year--;
   }
   
   uint8_t month = 0;
 
   for(uint8_t mon = 0; mon < 12; mon++){
     uint32_t zeroeth_day_of_month = zeroeth_day_of[mon];
+    
     if(is_leap_year(year) && mon>1){
       zeroeth_day_of_month++;
     }
+    
     if(zeroeth_day_of_month >= daynum){
       month = mon;
       break;
     }
+    
     if(mon == 11){
       month = 12;
     }
   }
   
-  if(is_leap_year(year) && month > 1){
+  if(is_leap_year(year) && month > 2){
     daynum--;
   }
-
+  
   daynum-=zeroeth_day_of[month-1];
   
   uint8_t day = daynum;
