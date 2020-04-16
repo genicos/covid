@@ -20,25 +20,20 @@ int main(){
   
   char this_row[6][15];
   
-  char *date_test = int_to_date(93);
-  printf("%s", date_test);
-  free(date_test);
-  
 
   fseek(data,0L,SEEK_END);               //// Loading bar 
   uint32_t data_size = ftell(data);        //  preperation
   fseek(data,0L,SEEK_SET);                 //
   uint8_t percentage_printed = 0;          //
   uint32_t bytes_processed = 0;          ////
-  printf("size%d\n",data_size);
 
-  printf("\nLoading...                                                                                    100%%-]\n");
+  printf("\nLoading...%%\n");
   while((word = next_word(data, &regex)) != NULL){
     
     bytes_processed+= strlen(word) + 1;
     uint8_t percentage_current = (bytes_processed * 100)/data_size;
     for(; percentage_printed < percentage_current; percentage_printed++){
-      printf("#");
+      printf("%d\n" , percentage_current);
     }
     
     if(column == 0){
