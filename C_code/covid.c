@@ -117,45 +117,125 @@ int main(int argc, char** argv){
   //36061 is new york city and surrounding areas
   county *of_study = county_table[fips_to_show];
   if(of_study){
-    for(uint32_t h = 0; h < of_study->last_day; h++){
-      uint32_t *cases = &of_study->cases[h];
-      if(cases[0] == 0){
-        cases[0] = cases[-1];
+    
+    printf("%s,%s\n",of_study->name,of_study->state);
+
+    if(show_cases){                                     //Cases display
+      
+      printf("\nDate      ,Cases    ,Graph\n");
+      
+      for(uint32_t h = 1; h < of_study->last_day; h++){
+        uint32_t *cases = &of_study->cases[h];
+        if(cases[0] == 0){
+          cases[0] = cases[-1];
+        }
+        
+        char *date = int_to_date(h);
+        
+	printf("%s ",date);
+        
+        printf("%9d ",cases[0]);
+        
+        uint8_t hashes = (cases[0]*100)/of_study->most_cases_day_count;
+        for(; hashes>0; hashes--){
+	  printf("#");
+	}
+
+	free(date);
+	printf("\n");
       }
-      
-      char *date = int_to_date(h);
-      printf("%s ",date);
-      free(date);
-      
-      printf("%9d",cases[0]);
-    }  
-  for(uint32_t h = 4;h<of_study->last_day; h++){
-     
-    uint32_t *cases = &of_study->cases[h];
-    if(cases[0] == 0){
-      cases[0] = cases[-1];
     }
 
-    uint8_t tens = log(cases[0])*2;
-    tens+=0;
-    
-    uint32_t this_change = cases[0]  - cases[-2];
-    uint32_t prev_change = cases[-1] - cases[-3];
-    
-    float growth_rate = 0;
-    if(prev_change != 0){
-      growth_rate = (float)this_change/prev_change;
+    if(show_deaths){                                    //Deaths display
+      
+      printf("\nDate      ,Deaths   ,Graph\n");
+      
+      for(uint32_t h = 1; h < of_study->last_day; h++){
+        uint32_t *deaths = &of_study->deaths[h];
+        if(deaths[0] == 0){
+          deaths[0] = deaths[-1];
+        }
+        
+        char *date = int_to_date(h);
+        
+	printf("%s ",date);
+        
+        printf("%9d ",deaths[0]);
+        
+        uint8_t hashes = (deaths[0]*100)/of_study->most_deaths_day_count;
+        for(; hashes>0; hashes--){
+	  printf("#");
+	}
+
+	free(date);
+	printf("\n");
+      }
     }
+
+    if(show_growth_rate){                                //Growth rate display
+      
+      printf("\nDate      ,Cases    ,Graph\n");
+      
+      for(uint32_t h = 4; h < of_study->last_day; h++){
+        uint32_t *cases = &of_study->cases[h];
+        if(cases[0] == 0){
+          cases[0] = cases[-1];
+        }
+        
+        char *date = int_to_date(h);
+        
+	printf("%s ",date);
+         
+        uint32_t this_change = cases[0]  - cases[-2];
+        uint32_t prev_change = cases[-1] - cases[-3];
     
-    
-    for(int j = 0;j<growth_rate*10;j++){
-      if(j<10)
-        printf("*");
-      else
-        printf("#");
+        float growth_rate = 0;
+        if(prev_change != 0){
+          growth_rate = (float)this_change/prev_change;
+        }
+        
+
+        printf("%9.3f ",growth_rate);
+        
+        for(int j = 0;j<growth_rate*10;j++){
+          if(j<10)
+            printf("*");
+          else
+            printf("#");
+        }
+
+	free(date);
+	printf("\n");
+      }
     }
-    printf("                              / cases: %d day number: %d", cases[0], h);
-      printf("\n");
+
+    if(show_log_cases){                                   //Log of cases display
+      
+      printf("\nDate      ,Log2Cases,Graph\n");
+      
+      for(uint32_t h = 0; h < of_study->last_day; h++){
+        uint32_t *cases = &of_study->cases[h];
+        if(cases[0] == 0){
+          cases[0] = cases[-1];
+        }
+        
+        char *date = int_to_date(h);
+        
+	printf("%s ",date);
+        
+        float log_cases = log(cases[0])/log(2);
+
+        printf("%9.3f ",log_cases);
+        
+        uint8_t hashes = (int)log_cases;
+        for(; hashes>0; hashes--){
+	  printf("#");
+	}
+
+
+	free(date);
+	printf("\n");
+      }
     }
   
   }else{
