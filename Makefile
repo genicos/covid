@@ -35,7 +35,7 @@ clean:
 	make cleano
 
 cleano:
-	rm -f  C_code/covid.o C_code/parser.o C_code/county.o C_code/test.o
+	rm -f  C_code/covid.o C_code/parser.o C_code/county.o C_code/state.o C_code/us.o C_code/test.o 
 
 covidval: 
 	make clean
