@@ -4,8 +4,8 @@ CC = clang -fno-color-diagnostics
 .PHONY: clean cleano covidval
 
 
-covid: covid.o parser.o county.o
-	$(CC) C_code/covid.o C_code/parser.o C_code/county.o -lm -o covid
+covid: covid.o parser.o county.o state.o us.o
+	$(CC) C_code/covid.o C_code/parser.o C_code/county.o  C_code/state.o C_code/us.o -lm -o covid
 
 covid.o: C_code/covid.c  
 	cd C_code && $(CC) $(CFLAGS) -c covid.c
@@ -15,6 +15,12 @@ parser.o: C_code/parser.c C_code/parser.h
 
 county.o: C_code/county.c C_code/county.h
 	cd C_code && $(CC) $(CFLAGS) -c county.c
+
+state.o: C_code/state.c C_code/state.h
+	cd C_code && $(CC) $(CFLAGS) -c state.c
+
+us.o: C_code/us.c C_code/us.h
+	cd C_code && $(CC) $(CFLAGS) -c us.c
 
 
 test: test.o county.o

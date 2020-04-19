@@ -70,7 +70,7 @@ int main(int argc, char** argv){
       row++;
       
       if(row > 2){
-        update_or_create(this_row);
+        update_or_create_county(this_row);
       }
     }
  
@@ -113,8 +113,7 @@ int main(int argc, char** argv){
 
 
 
-  //6085 is santa clara
-  //36061 is new york city and surrounding areas
+  
   county *of_study = county_table[fips_to_show];
   if(of_study){
     
