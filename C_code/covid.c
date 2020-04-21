@@ -7,17 +7,32 @@
 #include <getopt.h>
 
 int main(int argc, char** argv){
+  bool show_county = false;
   uint16_t fips_to_show = 0;
+
+  bool show_state = false;
+  uint8_t id_to_show = 0;
+  
+  bool show_us = false;
+  
   bool show_cases = false;
   bool show_deaths = false;
   bool show_growth_rate = false;
   bool show_log_cases = false;
   
   int c = 0;
-  while ((c = getopt(argc,argv, "f:cdgl")) != -1){
+  while ((c = getopt(argc,argv, "f:i:ucdgl")) != -1){
     switch(c){
     case 'f':
+      show_county = true;
       fips_to_show = atoi(optarg);
+      break;
+    case 'i':
+      show_state = true;
+      id_to_show = atoi(optarg);
+      break;
+    case 'u':
+      show_us = true;
       break;
     case 'c':
       show_cases = true;
@@ -40,30 +55,38 @@ int main(int argc, char** argv){
   regcomp(&regex, "[a-zA-ZÁ-ÿ0-9.' -]+", REG_EXTENDED);
   char *word;
   
-  FILE *data = fopen("us-counties.csv", "r");
-  
+  FILE *county_data = fopen("us-counties.csv", "r");
+  FILE *state_data  = fopen("us-states.csv", "r");
+  FILE *us_data     = fopen("us.csv", "r");
+
 
   int row = 0;
   int column = 0;
   char this_row[6][15];
   
   extern county *county_table[57000];
+  extern state  *state_table[57];
+  extern us     *united_states;
 
 
-  fseek(data,0L,SEEK_END);               //// Loading bar 
-  uint32_t data_size = ftell(data);        //  preperation
-  fseek(data,0L,SEEK_SET);                 //
-  uint8_t percentage_printed = 0;          //
-  uint32_t bytes_processed = 0;          ////
-
+  fseek(county_data,0L,SEEK_END);                                              //// Loading bar 
+  fseek(state_data ,0L,SEEK_END);
+  fseek(us_data    ,0L,SEEK_END);
+  uint32_t data_size = ftell(county_data) + ftell(state_data) + ftell(us_data);  //  preperation
+  fseek(county_data,0L,SEEK_SET);
+  fseek(state_data ,0L,SEEK_SET);
+  fseek(us_data    ,0L,SEEK_SET);
+  uint8_t percentage_printed = 0;          
+  uint32_t bytes_processed = 0;                                                ////
+  
   printf("Reading from us-counties.csv");
   printf("\nLoading...%%\n");
-  while((word = next_word(data, &regex)) != NULL){
+  while((word = next_word(county_data, &regex)) != NULL){
     
     bytes_processed+= strlen(word) + 1;
-    uint8_t percentage_current = (bytes_processed * 100)/data_size;
+    uint8_t percentage_current = (bytes_processed * 10)/data_size;
     for(; percentage_printed < percentage_current; percentage_printed++){
-      printf("%d\n" , percentage_current);
+      printf("%d\n" , percentage_current*10);
     }
     
     if(column == 0){
@@ -105,7 +128,65 @@ int main(int argc, char** argv){
   }
   clear_words();
   printf("Finished reading from us-counties.csv\n\n");
+  
+  column = 0;
+  row = 0;
 
+  printf("Reading from us-states.csv");
+  printf("\nLoading...%%\n");
+  while((word = next_word(state_data, &regex)) != NULL){
+    
+    bytes_processed+= strlen(word) + 1;
+    uint8_t percentage_current = (bytes_processed * 10)/data_size;
+    for(; percentage_printed < percentage_current; percentage_printed++){
+      printf("%d\n" , percentage_current*10);
+    }
+    
+    if(column == 0){
+      row++;
+      
+      if(row > 2){
+        update_or_create_state(this_row);
+      }
+    }
+ 
+    strcpy(this_row[column], word);
+
+    column++;
+    column%=5; 
+  }
+  clear_words();
+  printf("Finished reading from us-states.csv\n\n");
+  
+  row = 0;
+  column = 0;
+
+  printf("Reading from us.csv");
+  printf("\nLoading...%%\n");
+  while((word = next_word(us_data, &regex)) != NULL){
+    
+    bytes_processed+= strlen(word) + 1;
+    uint8_t percentage_current = (bytes_processed * 10)/data_size;
+    for(; percentage_printed < percentage_current; percentage_printed++){
+      printf("%d\n" , percentage_current*10);
+    }
+    
+    if(column == 0){
+      row++;
+      
+      if(row > 2){
+        update_or_create_us(this_row);
+      }
+    }
+ 
+    strcpy(this_row[column], word);
+    
+    column++;
+    column%=3; 
+  }
+  clear_words();
+  printf("Finished reading from us.csv\n\n");
+  
 
 
 
@@ -246,17 +327,34 @@ int main(int argc, char** argv){
 
   printf("\n\nStowing county information\n");
   printf("Loading...%%\n");
-  for(int h = 0; h < 100; h++){
-    for(int i = 0; i < 570; i++){
-      output_county(h*570 + i);
-      delete_county(county_table[h*570 + i]);
+  for(int h = 0; h < 10; h++){
+    for(int i = 0; i < 5700; i++){
+      output_county(h*5700 + i);
+      delete_county(county_table[h*5700 + i]);
     }
-    printf("%d\n",h);
+    printf("%d\n",h*10);
   }
   printf("Completed\n");
 
+
+  printf("\nStowing state information\n");
+  for(int h = 0; h < 57; h++){
+    output_state(h);
+    delete_state(state_table[h]);
+  }
+  printf("Completed\n");
+  
+
+  printf("\nStowing US information\n");
+  output_us();
+  delete_us();
+  printf("Completed\n");
+  
+  
   regfree(&regex);
-  fclose(data);
+  fclose(county_data);
+  fclose(state_data);
+  fclose(us_data);
 
   return 0;
 }

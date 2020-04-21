@@ -23,19 +23,22 @@ us.o: C_code/us.c C_code/us.h
 	cd C_code && $(CC) $(CFLAGS) -c us.c
 
 
-test: test.o county.o
-	$(CC) C_code/test.o county.o -o test
+test: test.o county.o state.o us.o
+	$(CC) C_code/test.o C_code/county.o C_code/state.o C_code/us.o -o test
 
 test.o: C_code/test.c
 	cd C_code && $(CC) $(CFLAGS) -c test.c
 
 
 clean: 
-	rm -f -r covid test counties/*
+	rm -f -r covid test
 	make cleano
 
 cleano:
 	rm -f  C_code/covid.o C_code/parser.o C_code/county.o C_code/state.o C_code/us.o C_code/test.o 
+
+cleandata:
+	rm -f counties/* states/* united_states/*
 
 covidval: 
 	make clean

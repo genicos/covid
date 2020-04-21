@@ -107,16 +107,108 @@ char *int_to_date(uint32_t daynum){
 
 
 
-us *update_or_create_us(char row[6][15]){
-  row++;
-  return NULL;
+us *update_or_create_us(char row[3][15]){
+  extern us *united_states;
+  
+  if(!united_states){
+    united_states = (us *)calloc(1,sizeof(us));
+    if(!united_states){
+      return NULL;
+    }
+  }
+
+  uint32_t daynumber = date_to_int(row[0]);
+
+  united_states->cases[daynumber] = atoi(row[1]);
+  if(united_states->cases[daynumber] > united_states->most_cases_day_count){
+    united_states->most_cases_day_count = united_states->cases[daynumber];
+  }
+
+  united_states->deaths[daynumber] = atoi(row[2]);
+  if(united_states->deaths[daynumber] > united_states->most_deaths_day_count){
+    united_states->most_deaths_day_count = united_states->deaths[daynumber];
+  }
+  
+  united_states->last_day = daynumber + 1;
+
+  return united_states;
+}
+
+
+void delete_us(void){
+  free(united_states);
+}
+
+void buffer_4bytes(char *buffer, uint32_t index, uint32_t data){
+  buffer[index + 0] = data       & 0xFF;
+  buffer[index + 1] = data >>  8 & 0xFF;
+  buffer[index + 2] = data >> 16 & 0xFF;
+  buffer[index + 3] = data >> 24 & 0xFF;
 }
 
 bool output_us(void){
-  return false;
+  if(!united_states){
+    return false;
+  }
+  
+
+  char *file_name = (char *)calloc(14, sizeof(char));
+  sprintf(file_name,"united_states");
+  
+  FILE *out = fopen(file_name, "w");
+  free(file_name);
+
+  if(!out){  
+    return false;
+  }
+  
+  static char buffer[YEARS*366*3*4 + 34];
+  uint32_t buffer_index = 0;
+
+  us *to_write = united_states;
+
+  buffer_4bytes(buffer,0, to_write->last_day);
+
+  buffer_index = 4;
+
+  //buffering cases array
+  for(uint32_t h = 0; h < to_write->last_day; h++, buffer_index+=4){
+    if(h > 0 && to_write->cases[h] == 0){
+      to_write->cases[h] = to_write->cases[h-1];
+    }
+    buffer_4bytes(buffer, buffer_index, to_write->cases[h]);
+  }
+  
+  //buffering deaths array
+  for(uint32_t h = 0; h < to_write->last_day; h++, buffer_index+=4){
+    if(h > 0 && to_write->deaths[h] == 0){
+      to_write->deaths[h] = to_write->deaths[h-1];
+    }
+    buffer_4bytes(buffer, buffer_index, to_write->deaths[h]);
+  }
+  
+
+  //buffering growth rate * 1000
+  for(uint32_t h = 0; h < to_write->last_day; h++, buffer_index+=4){
+    if(h<4){
+      continue;
+    }
+    
+    uint32_t *cases = &to_write->cases[h];
+    
+    uint32_t this_change = cases[0]  - cases[-2];
+    uint32_t prev_change = cases[-1] - cases[-3];
+    
+    uint32_t growth_rate = 0;
+    if(prev_change != 0){
+      growth_rate = (1000)*this_change/prev_change;
+    }
+    
+    buffer_4bytes(buffer, buffer_index, growth_rate);
+  }
+  
+  write(fileno(out), buffer, buffer_index - 4);
+  fclose(out);
+  
+  return true;
 }
-
-void delete_us(void){
-
-}
-

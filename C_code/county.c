@@ -1,6 +1,5 @@
 #include "county.h"
 
-#include <unistd.h>
 
 
 
@@ -65,12 +64,7 @@ void delete_county(county *c){
   }
 }
 
-void buffer_4bytes(char *buffer, uint32_t index, uint32_t data){
-  buffer[index + 0] = data       & 0xFF;
-  buffer[index + 1] = data >>  8 & 0xFF;
-  buffer[index + 2] = data >> 16 & 0xFF;
-  buffer[index + 3] = data >> 24 & 0xFF;
-}
+
 
 
 bool output_county(uint16_t fips){

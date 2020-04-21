@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-
+#include <unistd.h>
 
 #define YEARS  1   //number of years that data spans, rounded up
 #define YEAR_0 2020
@@ -32,6 +32,9 @@ us *united_states;
 
 //Takes a row from the us.csv and adds the info to the us
 us *update_or_create_us(char row[6][15]);
+
+//Buffers 4 bytes from data, little endian
+void buffer_4bytes(char *buffer, uint32_t index, uint32_t data);
 
 //creates a file containing us information
 //in the following format, all numbers are 4 byte unsigned ints, little endian
