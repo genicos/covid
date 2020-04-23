@@ -6,11 +6,12 @@
 typedef struct state{
   uint32_t cases[YEARS*365 + YEARS/4 + 1];
   uint32_t deaths[YEARS*365 + YEARS/4 + 1];
-  char *state;
 
   uint32_t most_cases_day_count;
   uint32_t most_deaths_day_count;
   uint32_t last_day;
+
+  char *state;
 } state;
 
 state *state_table[57];
