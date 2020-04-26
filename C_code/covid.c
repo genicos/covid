@@ -237,7 +237,10 @@ int main(int argc, char** argv){
         
         printf("%11d ",cases[0]);
         
-        uint8_t hashes = (cases[0]*100)/of_study->most_cases_day_count;
+        uint32_t hashes = (cases[0]*100);
+	if(of_study->most_cases_day_count != 0){
+	  hashes/=of_study->most_cases_day_count;
+	}
         for(; hashes>0; hashes--){
 	  printf("#");
 	}
@@ -263,7 +266,10 @@ int main(int argc, char** argv){
         
         printf("%11d ",deaths[0]);
         
-        uint8_t hashes = (deaths[0]*100)/of_study->most_deaths_day_count;
+        uint32_t hashes = (deaths[0]*100);
+	if(of_study->most_deaths_day_count != 0){
+          hashes/=of_study->most_deaths_day_count;
+	}
         for(; hashes>0; hashes--){
 	  printf("#");
 	}
