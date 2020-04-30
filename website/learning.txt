@@ -1,0 +1,15 @@
+They do not do the same thing.id is used to target a specific element, classname can be used to target multiple elements.
+
+Example:
+
+<div id="mycolor1" class="mycolor2">     hello world </div>
+<div class="mycolor2">     hello world2 </div>
+<div class="mycolor2">     hello world3 </div>
+Now, you can refer all the divs with classname mycolor2 at once using
+
+.mycolor2{ color: red } //for example - in css
+This would set all nodes with class mycolor2 to red.
+
+However, if you want to set specifically mycolor1 to blue , you can target it specifically like this:
+
+#mycolor1{ color: blue; }
