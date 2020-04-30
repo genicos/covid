@@ -1,14 +1,11 @@
 #USButton {
-  margin: 0 auto;
+  text-align: center;
 }
 
-#why {
-  font-size: 40px;
-}
+
 
 #SearchState {
-  margin: 0 auto;
-
+  text-align: center;
 }
 
 #TextBar {
@@ -16,7 +13,6 @@
   background-position: 10px 12px;                   /* Position the search icon */
   background-repeat: no-repeat;                     /* Do not repeat the icon image */
   width: 20%;
-  margin: auto;
   font-size: 16px;
   padding: 12px 20px 12px 40px;
   border: 1px solid #ddd;
