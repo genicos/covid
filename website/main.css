@@ -1,10 +1,18 @@
+body {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100%;
+}
+
 #USButton {
   text-align: center;
+  margin: 0% 0% 5% 0%;
 }
 
 
 
-#SearchState {
+.StateSearch{
   text-align: center;
 }
 
