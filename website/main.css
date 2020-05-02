@@ -27,6 +27,13 @@ body {
   margin-bottom: 12px;
 }
 
+#SearchButton {
+  border: 2px solid #111111;
+  padding: 5px;
+  width: 100px;
+  height: 100px;
+}
+
 #myUL {
   /* Remove default list styling */
   list-style-type: none;
