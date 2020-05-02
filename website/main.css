@@ -16,22 +16,25 @@ body {
   text-align: center;
 }
 
+#Search{
+ margin-bottom: 12px; 
+}
+
+
 #TextBar {
-  background-image: url('images/SearchIcon.png');   /* Add a search icon to input */
-  background-position: 10px 12px;                   /* Position the search icon */
-  background-repeat: no-repeat;                     /* Do not repeat the icon image */
   width: 20%;
   font-size: 16px;
-  padding: 12px 20px 12px 40px;
+  padding: 12px 12px 12px 12px;
   border: 1px solid #ddd;
-  margin-bottom: 12px;
+  vertical-align: top;
 }
 
 #SearchButton {
-  border: 2px solid #111111;
+  border: 1px solid #aaa;
   padding: 5px;
-  width: 100px;
-  height: 100px;
+  width: 32px;
+  height: 32px;
+  vertical-align: top;
 }
 
 #myUL {
