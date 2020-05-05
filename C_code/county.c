@@ -143,7 +143,7 @@ bool output_county(uint16_t fips){
     buffer_4bytes(buffer, buffer_index, growth_rate);
   }
   
-  write(fileno(out), buffer, buffer_index - 4);
+  write(fileno(out), buffer, buffer_index);
   fclose(out);
   
   return true;
