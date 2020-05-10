@@ -4,7 +4,6 @@ var YEAR_0 = 2020;
 ~~(a/b) is used for integer division (the bit operation ~ tells javascript to work with integers)
 
 */
-console.log("FREE");
 
 function is_leap_year(year){
   return (year%4==0) && (year%100!=0 || year%400==0);
@@ -86,6 +85,7 @@ function IntToDate(daynum){
 }
 
 
+/*
 const fs = require('fs')
 
 
@@ -114,9 +114,10 @@ fs.readFile('../united_states', (err,data) => {
   
   
 })
-
-/*var c = document.getElementById("draw");
+*/
+var c = document.getElementById("draw");
 var ctx = c.getContext("2d");
 
 ctx.fillStyle = "#0000FF";
-ctx.fillRect(0,0,100,100);*/
+ctx.fillRect(0,0,100,50);
+
