@@ -5,6 +5,16 @@ var YEAR_0 = 2020;
 
 */
 
+/*function loadFile(filepath){
+  var result = null;
+  var xmlhttp = new XMLHttpRequest();
+  xmlhttp.open("GET", filepath, false);
+  xmlhttp.send();
+  if(xmlhttp.status == 200){
+    result = xmlhttp.responseText;
+  }
+}*/
+
 function is_leap_year(year){
   return (year%4==0) && (year%100!=0 || year%400==0);
 }
@@ -121,3 +131,24 @@ var ctx = c.getContext("2d");
 ctx.fillStyle = "#0000FF";
 ctx.fillRect(0,0,100,50);
 
+
+
+
+function loadFile(filePath) {
+  var result = null;
+  var xmlhttp = new XMLHttpRequest();
+  xmlhttp.open("GET", filePath, false);
+  xmlhttp.send();
+  if (xmlhttp.status==200) {
+    result = xmlhttp.responseText;
+  }
+  return result;
+}
+
+var myStuff = loadFile("text.txt");
+alert(myStuff);
+
+
+var letsHope = loadFile("text.txt");
+
+document.getElementById("shink").innerHTML = letsHope;
