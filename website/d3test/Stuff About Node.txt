@@ -1,0 +1,39 @@
+Node.js is a javascript runtime environment that runs on Chrome's v8 javascript engine. It's 
+asynchronous, which is super nice for efficiency and shit. It also allegedly gives us a nice
+FILE HANDLING SYSTEM, which is ideal. Its easy to run from the terminal and check how the website
+looks through a local port, and I think can be used to run an actual server on the WORLD WIDE WEB,
+but I need to double check that.
+
+Anyways, Node.js doesn't use the global document object, but does have a bunch of other global
+methods we can use.
+
+Send the SIGTERM signal to kill your program softly.
+
+Process is a main module of Node.js, whatever that means. Process.env lets you access all the 
+environmental variables set once initialized.
+
+Sidenote: any console.log calls print messages to the SERVER'S console, not the browser running it
+(obviously). So when you want to print shit out, don't look in Chrome's view of the console, but
+the terminal window that is currently running the server.
+
+Typing node into the console opens a commandline where we can write and run javascript code! You 
+can even write lil' functions and node will let you keep writing them over multiple lines until you
+close the definition with brackets.
+
+Excellent website: https://nodejs.dev/learn/introduction-to-nodejs
+
+Callbacks are very important: essentially let you define events that program listens for constantly.
+These callbacks let you run a seperate function whenever these events trigger.
+Ex/ window.addEventListener('load', () => {  //stuff to run when page loads });
+
+2 options for file loading: 1) 
+
+Avoid CALLBACK HELL(http://callbackhell.com/).
+
+Questions:
+
+How do arrow operators work? They are used all the time in code examples I see.
+
+How do we run Node.js code on a server that can be accessed by everyone?
+
+How do 'signals' work in javascipt?
