@@ -8,8 +8,17 @@ const port = 3000;
 const server = http.createServer((req, res) => {
   // statusCode of 200 means server creation was successful
   res.statusCode = 200;
-  res.setHeader('Content-Type', 'text/plain');
-  res.end('Hello Mama');
+  //res.end('Hello Mama');
+
+  fs.readFile('B:/COVID Visualization Website/covid/website/d3test/us.csv', 'utf-8', (err,data) => {
+    if (err) {
+        console.error(err);
+        return;
+    }
+    console.log(data);
+    res.setHeader('Content-Type', 'text/plain');
+    res.write(`Data: ${data}`);
+  });
 });
 
 // res = response, req = request
@@ -22,14 +31,7 @@ server.listen(port, hostname, () => {
 /* readFile reads entire file before processing callback, which could be slow - the alternative
 * is to set up a data stream, but I don't think we can make graphs without loading the whole file :/
 */
-fs.readFile('B:/COVID Visualization Website/covid/website/d3test/us.csv', 'utf-8', (err,data) => {
-    if (err) {
-        console.error(err);
-        return;
-    }
-    console.log(data);
-    server.res.end(`Data: ${data}`);
-})
+
 
 process.on('SIGTERM', () => {
     server.close(() => {

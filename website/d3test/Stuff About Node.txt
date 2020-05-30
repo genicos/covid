@@ -1,3 +1,13 @@
+INSTRUCTIONS
+This may be incomplete.
+1. Install Node.js
+2. Open a terminal window in d3test directory
+3. Enter "node app.js" into terminal. Server should start.
+4. Visit http://127.0.0.1:3000/ on your browser of choice. Countrywide data should be printed on both webpage
+and on server console.
+
+
+
 Node.js is a javascript runtime environment that runs on Chrome's v8 javascript engine. It's 
 asynchronous, which is super nice for efficiency and shit. It also allegedly gives us a nice
 FILE HANDLING SYSTEM, which is ideal. Its easy to run from the terminal and check how the website
