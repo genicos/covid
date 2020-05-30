@@ -1,5 +1,6 @@
 const http = require('http');
 const fs = require('fs'); /* File System module */
+const path = require('path');
 
 const hostname = '127.0.0.1';
 const port = 3000;
@@ -10,7 +11,7 @@ const server = http.createServer((req, res) => {
   res.statusCode = 200;
   //res.end('Hello Mama');
 
-  fs.readFile('B:/COVID Visualization Website/covid/website/d3test/us.csv', 'utf-8', (err,data) => {
+  fs.readFile(path.resolve('us.csv'), 'utf-8', (err,data) => {
     if (err) {
         console.error(err);
         return;
